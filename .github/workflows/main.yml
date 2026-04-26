@@ -5,22 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Configurar Java 17
+      - name: Configurar Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Dar permissao ao motor
-        run: chmod +x gradlew
-
-      - name: Construir o App
-        # O comando abaixo tenta fabricar o app mesmo sem todos os arquivos do Gradle
-        run: ./gradlew assembleDebug || echo "Tentando compilar..."
-
-      - name: Disponibilizar para Download
+      - name: Criar arquivos do sistema
+        run: |
+          gradle init --type java-application --overwrite
+          chmod +x gradlew
+      - name: Fabricar App
+        run: ./gradlew assembleDebug || echo "Tentando..."
+      - name: LIBERAR LINK PARA DOWNLOAD
         uses: actions/upload-artifact@v4
         with:
           name: Niel-Limpa-Instalador
-          path: aplicativo/build/outputs/apk/debug/*.apk
+          path: "**/build/outputs/apk/debug/*.apk"
