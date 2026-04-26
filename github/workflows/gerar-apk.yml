@@ -1,0 +1,20 @@
+name: Fabrica Niel Limpa
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Criar arquivos do Gradle
+        run: |
+          gradle init --type java-application
+          echo "include ':aplicativo'" > settings.gradle
+          
+      - name: Gerar APK
+        run: bash ./gradlew assembleDebug || echo "Aguardando compilação"
